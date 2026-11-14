@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Papy la Popote — Entrée</title>
+<meta name="theme-color" content="#6c2818">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icones/favicon-48.png">
+<link rel="apple-touch-icon" href="icones/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Papy la Popote">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
   * { box-sizing: border-box; }
   body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #f4e9d7; font-family: Georgia, serif; }
@@ -47,6 +55,18 @@
   .livre-lien:hover span, .livre-lien:focus-visible span { opacity: 1; }
   @media (hover: none) { .scene.terminee .livre-lien { animation: halo 2.4s ease-out infinite; } }
   .scene.sans-transition img { transition: none !important; }
+
+  /* Barre d'outils : installation et état hors ligne */
+  .outils { position: fixed; left: 50%; bottom: max(10px, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 10;
+            display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; width: max-content; max-width: 96vw; }
+  .puce { border: 0; border-radius: 999px; padding: .5em .9em; font: 600 14px system-ui, sans-serif; background: rgba(255,250,240,.94); color: #6c2818;
+          box-shadow: 0 2px 10px rgba(60,30,10,.25); }
+  button.puce { background: #6c2818; color: #fff; cursor: pointer; }
+  .puce[hidden] { display: none; }
+  .aide-ios { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; background: rgba(40,20,10,.55); padding: 16px; }
+  .aide-ios[hidden] { display: none; }
+  .aide-ios div { max-width: 360px; background: #fffaf0; border-radius: 16px; padding: 22px; font: 16px/1.5 system-ui, sans-serif; color: #3a2414; text-align: center; }
+  .aide-ios b { color: #6c2818; } .aide-ios button { margin-top: 14px; }
   @media (prefers-reduced-motion: reduce) {
     .ouverte, .cuisine { transition-duration: .01ms; }
     .cuisine { transform: none; }
@@ -66,6 +86,17 @@
   <a class="livre-lien sucre" href="livres/recettes-sucrees-france.html" aria-label="Ouvrir le livre « Recettes sucrées »"><span>Ouvrir les recettes sucrées</span></a>
   <button class="ressortir" id="ressortir">Ressortir</button>
 </main>
+<div class="outils">
+  <button class="puce" id="installer" hidden>📲 Installer l'application</button>
+  <span class="puce" id="etat-horsligne" hidden></span>
+</div>
+<div class="aide-ios" id="aide-ios" hidden><div>
+  Pour installer <b>Papy la Popote</b> sur l'écran d'accueil :<br><br>
+  1. touchez le bouton <b>Partager</b> (le carré avec une flèche vers le haut) ;<br>
+  2. choisissez <b>« Sur l'écran d'accueil »</b> ;<br>
+  3. touchez <b>Ajouter</b>.
+  <br><button class="puce" id="aide-fermer">J'ai compris</button>
+</div></div>
 <script>
 const scene = document.getElementById('scene');
 const imgs = scene.querySelectorAll('img');
@@ -106,6 +137,34 @@ if (location.hash === '#cuisine') {
 
 // Précharger les images suivantes pour que les fondus soient fluides
 [...imgs].forEach(i => { i.decoding = 'async'; });
+
+/* ─── Application installable et consultable hors ligne ─── */
+const etat = document.getElementById('etat-horsligne');
+const btnInstaller = document.getElementById('installer');
+const autonome = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+let invite = null;
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); invite = e; btnInstaller.hidden = false; });
+if (ios && !autonome) btnInstaller.hidden = false;
+btnInstaller.addEventListener('click', async () => {
+  if (invite) { invite.prompt(); await invite.userChoice; invite = null; btnInstaller.hidden = true; }
+  else if (ios) document.getElementById('aide-ios').hidden = false;
+});
+document.getElementById('aide-fermer').addEventListener('click', () => { document.getElementById('aide-ios').hidden = true; });
+addEventListener('appinstalled', () => { btnInstaller.hidden = true; });
+
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  navigator.serviceWorker.register('sw.js').then(() => navigator.serviceWorker.ready).then(reg => {
+    navigator.serviceWorker.addEventListener('message', e => {
+      const d = e.data; if (!d || d.type !== 'horsligne') return;
+      etat.hidden = false;
+      if (!d.fini) etat.textContent = '📥 Préparation hors ligne : ' + Math.floor(100 * d.fait / d.total) + ' %';
+      else if (d.erreurs) etat.textContent = '⚠️ Hors ligne incomplet (connexion coupée) : réessai à la prochaine visite';
+      else { etat.textContent = '✓ Disponible hors ligne'; setTimeout(() => { etat.hidden = true; }, 4000); }
+    });
+    reg.active && reg.active.postMessage({ type: 'telecharger' });
+  });
+}
 </script>
 </body>
 </html>

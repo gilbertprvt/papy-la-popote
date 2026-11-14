@@ -3,6 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#6c2818">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" type="image/png" href="../icones/favicon-48.png">
+<link rel="apple-touch-icon" href="../icones/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Papy la Popote">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Recettes sucrées de France — Tome 2 — Papy la Popote</title>
   <link rel="stylesheet" href="../commun/site.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -4631,5 +4639,6 @@
 </aside>
 </div></div></div>
 <script src="../commun/livre.js"></script>
+<script>if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('../sw.js', { scope: '../' });</script>
 </body>
 </html>

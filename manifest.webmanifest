@@ -1,0 +1,30 @@
+{
+ "name": "Papy la Popote",
+ "short_name": "Papy la Popote",
+ "description": "La cuisine de Papy : les recettes salées et sucrées de toutes les régions de France.",
+ "lang": "fr",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#f4e9d7",
+ "theme_color": "#6c2818",
+ "icons": [
+  {
+   "src": "icones/icone-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icones/icone-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "icones/icone-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}
