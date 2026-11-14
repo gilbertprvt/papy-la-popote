@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Papy la Popote — Entrée</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #f4e9d7; font-family: Georgia, serif; }
+  .scene { position: relative; width: min(100vw, 100vh, 860px); aspect-ratio: 1; overflow: hidden; isolation: isolate; }
+  .scene img { display: block; width: 100%; height: 100%; position: absolute; inset: 0; object-fit: cover; user-select: none; pointer-events: none; }
+
+  /* Étape 1 : la porte s'ouvre lentement (4,5 s) */
+  .ouverte { opacity: 0; transition: opacity 4.5s ease-in-out; }
+  .scene.est-ouverte .ouverte { opacity: 1; }
+
+  /* Étape 2 : on entre dans la cuisine (fondu, avec un léger zoom comme si l'on avançait) */
+  .cuisine { opacity: 0; transform: scale(1.06); transition: opacity 2.2s ease, transform 3s ease-out; }
+  .scene.dans-cuisine .cuisine { opacity: 1; transform: scale(1); }
+
+  /* Zones cliquables : le panneau « Entrée » et la porte elle-même */
+  .entree { position: absolute; border: 0; padding: 0; background: transparent; cursor: pointer; z-index: 2; }
+  .entree.panneau { left: 68%; top: 31%; width: 24%; height: 18%; }
+  .entree.porte { left: 33%; top: 21%; width: 32%; height: 68%; }
+  .entree:focus-visible { outline: 4px solid #ffe16a; outline-offset: 3px; border-radius: 8px; }
+  .scene.est-ouverte .entree { display: none; }
+
+  /* Invitation discrète à cliquer, sur le panneau « Entrée » */
+  .halo { position: absolute; left: 68%; top: 31%; width: 24%; height: 18%; border-radius: 14px; z-index: 1; pointer-events: none;
+          box-shadow: 0 0 0 0 rgba(255,225,106,.7); animation: halo 2.4s ease-out infinite; }
+  .scene.est-ouverte .halo { display: none; }
+  @keyframes halo { 0% { box-shadow: 0 0 0 0 rgba(255,225,106,.65); } 70%, 100% { box-shadow: 0 0 0 18px rgba(255,225,106,0); } }
+
+  .ressortir { position: absolute; right: 2%; bottom: 2%; z-index: 3; border: 0; background: #6c2818; color: white; padding: .7em 1em; border-radius: 10px;
+               font: 600 15px system-ui, sans-serif; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .4s; }
+  .scene.terminee .ressortir { opacity: 1; pointer-events: auto; }
+
+
+  /* Les deux livres de la table, cliquables une fois dans la cuisine */
+  .livre-lien { position: absolute; z-index: 2; border-radius: 6px; display: none; }
+  .livre-lien.sale { left: 38.5%; top: 50.5%; width: 26.5%; height: 24%; }
+  .livre-lien.sucre { left: 66.5%; top: 50.5%; width: 26.5%; height: 24%; }
+  .scene.terminee .livre-lien { display: block; }
+  .livre-lien:hover, .livre-lien:focus-visible { box-shadow: 0 0 0 4px rgba(255,225,106,.9), 0 0 26px 8px rgba(255,225,106,.55); outline: none; }
+  .livre-lien span { position: absolute; left: 50%; bottom: -2.2em; transform: translateX(-50%); white-space: nowrap; background: #6c2818; color: #fff;
+                     font: 600 14px system-ui, sans-serif; padding: .35em .7em; border-radius: 8px; opacity: 0; transition: opacity .25s; pointer-events: none; }
+  .livre-lien:hover span, .livre-lien:focus-visible span { opacity: 1; }
+  @media (hover: none) { .scene.terminee .livre-lien { animation: halo 2.4s ease-out infinite; } }
+  .scene.sans-transition img { transition: none !important; }
+  @media (prefers-reduced-motion: reduce) {
+    .ouverte, .cuisine { transition-duration: .01ms; }
+    .cuisine { transform: none; }
+    .halo { animation: none; }
+  }
+</style>
+</head>
+<body>
+<main class="scene" id="scene" aria-label="Entrée de la cuisine de Papy la Popote">
+  <img src="images/porte-fermee.webp" alt="Papy la Popote devant la porte fermée de sa cuisine">
+  <img class="ouverte" src="images/porte-ouverte.webp" alt="" aria-hidden="true">
+  <img class="cuisine" src="images/cuisine.webp" alt="" aria-hidden="true">
+  <span class="halo" aria-hidden="true"></span>
+  <button class="entree panneau" id="entree" aria-label="Ouvrir la porte et entrer dans la cuisine" title="Entrer"></button>
+  <button class="entree porte" tabindex="-1" aria-hidden="true" title="Entrer"></button>
+  <a class="livre-lien sale" href="livres/recettes-salees-france.html" aria-label="Ouvrir le livre « Recettes salées »"><span>Ouvrir les recettes salées</span></a>
+  <a class="livre-lien sucre" href="livres/recettes-sucrees-france.html" aria-label="Ouvrir le livre « Recettes sucrées »"><span>Ouvrir les recettes sucrées</span></a>
+  <button class="ressortir" id="ressortir">Ressortir</button>
+</main>
+<script>
+const scene = document.getElementById('scene');
+const imgs = scene.querySelectorAll('img');
+const ressortir = document.getElementById('ressortir');
+const lent = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+let minuteurs = [];
+function plus_tard(fn, ms) { minuteurs.push(setTimeout(fn, lent ? ms : 0)); }
+function annuler() { minuteurs.forEach(clearTimeout); minuteurs = []; }
+
+function entrer() {
+  annuler();
+  scene.classList.add('est-ouverte');                 // 1. la porte s'ouvre (4,5 s)
+  plus_tard(() => {                                    // 2. dès que la porte est ouverte, la cuisine apparaît en fondu
+    scene.classList.add('dans-cuisine');
+    imgs[0].alt = ''; imgs[2].alt = "La cuisine de Papy la Popote, avec les livres « Recettes salées » et « Recettes sucrées » sur la table";
+    imgs[2].removeAttribute('aria-hidden');
+  }, 4500);
+  plus_tard(() => scene.classList.add('terminee'), 7000);
+}
+scene.querySelectorAll('.entree').forEach(b => b.addEventListener('click', entrer));
+
+ressortir.addEventListener('click', () => {           // retour devant la porte fermée
+  annuler();
+  scene.classList.remove('est-ouverte', 'dans-cuisine', 'terminee');
+  imgs[0].alt = 'Papy la Popote devant la porte fermée de sa cuisine';
+  imgs[2].alt = ''; imgs[2].setAttribute('aria-hidden', 'true');
+  document.getElementById('entree').focus();
+});
+
+// Retour d'un livre (index.html#cuisine) : on arrive directement dans la cuisine
+if (location.hash === '#cuisine') {
+  scene.classList.add('sans-transition', 'est-ouverte', 'dans-cuisine', 'terminee');
+  requestAnimationFrame(() => requestAnimationFrame(() => scene.classList.remove('sans-transition')));
+  imgs[0].alt = ''; imgs[2].alt = "La cuisine de Papy la Popote, avec les livres « Recettes salées » et « Recettes sucrées » sur la table";
+  imgs[2].removeAttribute('aria-hidden');
+  history.replaceState(null, '', location.pathname);
+}
+
+// Précharger les images suivantes pour que les fondus soient fluides
+[...imgs].forEach(i => { i.decoding = 'async'; });
+</script>
+</body>
+</html>
