@@ -47,10 +47,38 @@
   .carnet-attente { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; background: rgba(40,20,10,.5); }
   .carnet-attente[hidden] { display: none; }
   .carnet-attente div { background: #fffaf0; border-radius: 14px; padding: 22px 26px; font: 17px system-ui, sans-serif; }
-  @media (max-width: 640px) { .carnet-entete { padding: 20px 16px 16px; border-left-width: 10px; } .carnet-fiche { padding: 16px 12px 4px; } }
+  /* Recettes de famille */
+  .carnet-souvenir { margin: 4px 0 14px; padding: 14px 18px; background: #fdf3df; border-left: 5px solid #C8843A; border-radius: 6px 12px 12px 6px;
+    font: italic 17px/1.6 Georgia, serif; color: #4a2c16; }
+  .carnet-form { background: #fffaf0; border: 2px solid #C8843A; border-radius: 14px; padding: 20px 22px; margin-bottom: 22px; box-shadow: 0 6px 18px rgba(60,30,10,.18);
+    font: 16px system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .carnet-form[hidden] { display: none; }
+  .carnet-form h2 { font: 700 24px 'Playfair Display', Georgia, serif; color: #6c2818; margin: 0 0 4px; }
+  .carnet-form .aide { margin: 0 0 14px; color: #8B7355; font-size: 15px; }
+  .carnet-form label { display: block; font-weight: 600; color: #6c2818; margin: 12px 0 4px; }
+  .carnet-form label small { font-weight: 400; color: #8B7355; }
+  .carnet-form input[type=text], .carnet-form textarea { width: 100%; box-sizing: border-box; font: 17px/1.5 Georgia, serif; color: #3a2414; padding: 9px 12px;
+    border: 1.5px solid #d9c3a0; border-radius: 10px; background: #fff; }
+  .carnet-form textarea { min-height: 120px; resize: vertical; background: #fff repeating-linear-gradient(#fff 0 25px, #f1e6d2 25px 26px); background-position: 0 8px; line-height: 26px; }
+  .carnet-form input:focus, .carnet-form textarea:focus { outline: none; border-color: #C8843A; box-shadow: 0 0 0 3px rgba(200,132,58,.25); }
+  .carnet-form .ligne { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0 14px; }
+  .carnet-form .choix { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 4px; }
+  .carnet-form .choix label { display: inline-flex; align-items: center; gap: 6px; margin: 0; font-weight: 500; color: #3a2414; cursor: pointer; }
+  .carnet-form .photo-zone { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .carnet-form .photo-zone img { width: 120px; height: 90px; object-fit: cover; border-radius: 8px; border: 1px solid #d9c3a0; }
+  .carnet-form [hidden] { display: none !important; }
+  .carnet-form .photo-zone input[type=file] { position: absolute; width: 1px; height: 1px; opacity: 0; }
+  .carnet-form .photo-zone label, .carnet-form .photo-zone button { margin: 0; font: 600 15px system-ui, sans-serif; border-radius: 999px; padding: 8px 16px; border: 1.5px solid #6c2818; background: #fffaf0; color: #6c2818; cursor: pointer; }
+  .carnet-form .photo-zone label:hover, .carnet-form .photo-zone button:hover, .carnet-form .photo-zone input:focus-visible + label { background: #C8843A; border-color: #C8843A; color: #fff; }
+  .carnet-form .boutons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+  .carnet-form .boutons button { font: 600 16px system-ui, sans-serif; border-radius: 999px; padding: 10px 20px; border: 1.5px solid #6c2818; background: #fffaf0; color: #6c2818; cursor: pointer; }
+  .carnet-form .boutons .principal { background: #6c2818; color: #fff; }
+  .carnet-form .boutons button:hover { background: #C8843A; border-color: #C8843A; color: #fff; }
+  .carnet-outils .famille { background: #3B6D11; border-color: #3B6D11; color: #fff; }
+  @media (max-width: 640px) { .carnet-entete { padding: 20px 16px 16px; border-left-width: 10px; } .carnet-fiche { padding: 16px 12px 4px; } .carnet-form { padding: 16px 14px; } }
   @media print {
     body.carnet { background: #fff; }
-    .carnet-outils, .carnet-fiche-outils, .carnet-bas, .carnet-attente { display: none !important; }
+    .carnet-outils, .carnet-fiche-outils, .carnet-bas, .carnet-attente, .carnet-form { display: none !important; }
     .carnet-entete, .carnet-sommaire, .carnet-fiche { box-shadow: none; border: 0; }
     .carnet-entete { page-break-after: always; text-align: center; padding-top: 30vh; }
     .carnet-sommaire { page-break-after: always; }
@@ -68,12 +96,47 @@
     <h1 id="carnet-titre">📒 Mon carnet de recettes</h1>
     <p id="carnet-sous-titre">Les recettes choisies dans les livres de Papy la Popote</p>
     <div class="carnet-outils" id="carnet-outils">
+      <button type="button" class="famille" id="b-famille">✍️ Écrire une recette de famille</button>
       <button type="button" class="principal" id="b-telecharger">⬇️ Télécharger mon carnet</button>
       <button type="button" id="b-imprimer">🖨️ Imprimer</button>
       <label for="f-ouvrir" tabindex="0">📂 Ouvrir un carnet téléchargé</label><input type="file" id="f-ouvrir" accept=".html,text/html">
       <button type="button" id="b-vider">🗑️ Vider le carnet</button>
     </div>
   </header>
+  <form class="carnet-form" id="carnet-form" hidden autocomplete="off">
+    <h2 id="form-titre">✍️ Une recette de famille</h2>
+    <p class="aide">Écrivez la recette comme elle vous a été transmise. Seul le nom est obligatoire.</p>
+    <label for="ff-titre">Nom de la recette</label>
+    <input type="text" id="ff-titre" required maxlength="120" placeholder="Ex. : Le clafoutis de Mamie Jeanne">
+    <label>C'est une recette…</label>
+    <div class="choix">
+      <label><input type="radio" name="ff-genre" value="salee" checked> 🍲 salée</label>
+      <label><input type="radio" name="ff-genre" value="sucree"> 🥧 sucrée</label>
+    </div>
+    <label for="ff-qui">Recette de… <small>(qui vous l'a transmise)</small></label>
+    <input type="text" id="ff-qui" maxlength="80" placeholder="Ex. : Mamie Jeanne, Tonton Paul">
+    <div class="ligne">
+      <div><label for="ff-pers">Pour combien ?</label><input type="text" id="ff-pers" maxlength="30" placeholder="Ex. : 6 personnes"></div>
+      <div><label for="ff-prep">Préparation</label><input type="text" id="ff-prep" maxlength="30" placeholder="Ex. : 20 min"></div>
+      <div><label for="ff-cuis">Cuisson</label><input type="text" id="ff-cuis" maxlength="30" placeholder="Ex. : 45 min"></div>
+    </div>
+    <label>Photo du plat <small>(facultatif)</small></label>
+    <div class="photo-zone">
+      <img id="ff-apercu" alt="Aperçu de la photo" hidden>
+      <input type="file" id="ff-photo" accept="image/*"><label for="ff-photo" id="ff-photo-lib">📷 Choisir une photo</label>
+      <button type="button" id="ff-sans-photo" hidden>Enlever la photo</button>
+    </div>
+    <label for="ff-ingr">Les ingrédients <small>(un par ligne, ex. : 250 g de farine)</small></label>
+    <textarea id="ff-ingr" rows="6" placeholder="250 g de farine&#10;3 œufs&#10;50 cl de lait&#10;1 pincée de sel"></textarea>
+    <label for="ff-etapes">La préparation <small>(une étape par ligne)</small></label>
+    <textarea id="ff-etapes" rows="7" placeholder="Mélanger la farine et les œufs.&#10;Ajouter le lait petit à petit.&#10;Cuire 45 minutes à 180 °C."></textarea>
+    <label for="ff-mot">Le petit mot de la famille <small>(un souvenir, un conseil, facultatif)</small></label>
+    <textarea id="ff-mot" rows="3" placeholder="Ex. : Mamie le faisait chaque dimanche avec les cerises du jardin."></textarea>
+    <div class="boutons">
+      <button type="submit" class="principal" id="ff-ok">📒 Enregistrer dans mon carnet</button>
+      <button type="button" id="ff-annuler">Annuler</button>
+    </div>
+  </form>
   <nav class="carnet-sommaire" id="carnet-sommaire" hidden></nav>
   <div class="livre-recettes" id="carnet-recettes"></div>
 </div>
@@ -86,38 +149,144 @@
   var zone = document.getElementById('carnet-recettes'), som = document.getElementById('carnet-sommaire');
   function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function groupes(l) {
-    var g = [['salee', '🍲 Recettes salées'], ['sucree', '🥧 Recettes sucrées'], ['', '📖 Autres recettes']];
-    return g.map(function (x) { return [x[1], l.filter(function (r) { return (r.genre || '') === x[0]; })]; }).filter(function (x) { return x[1].length; });
+    var g = [['famille', '👵 Mes recettes de famille'], ['salee', '🍲 Recettes salées'], ['sucree', '🥧 Recettes sucrées'], ['', '📖 Autres recettes']];
+    return g.map(function (x) {
+      return [x[1], l.filter(function (r) { return x[0] === 'famille' ? r.famille : !r.famille && (r.genre || '') === x[0]; })];
+    }).filter(function (x) { return x[1].length; });
   }
+  function nbTexte(n, un, plusieurs) { return n + ' ' + (n > 1 ? plusieurs : un); }
+
+  /* Une recette de famille est gardée sous forme de champs ; sa fiche est fabriquée ici,
+     avec les mêmes classes que les recettes des livres (styles de commun/site.css). */
+  var UNITES = /^(\d[\d.,\/]*|½|¼|¾|⅓|⅔)(\s*(?:kg|g|mg|cl|dl|ml|l|litres?|pincées?|cuill[eè]res?\s+à\s+(?:soupe|café)|c\.\s?à\s?[sc]\.?|verres?|tasses?|bols?|sachets?|noix|noisettes?))?\s+(.+)$/i;
+  function lignes(t) { return String(t || '').split(/\n/).map(function (x) { return x.replace(/^\s*(?:[-•*·–]|\d+[.)])\s*/, '').trim(); }).filter(Boolean); }
+  function construire(r) {
+    var c = r.champs || {}, h = '';
+    h += '<section class="section recette" id="' + esc(r.id) + '" style="--rc:#6c2818;--rc2:#4a1a0e">' +
+      '<h2 class="section-titre"><div class="section-titre-icon">' + (r.genre === 'sucree' ? '🥧' : '🍲') + '</div>' + esc(r.titre) + '</h2>';
+    if (c.photo) h += '<div class="recette-partie"><figure class="photo-bloc photo-centre"><img src="' + c.photo + '" alt="' + esc(r.titre) + '" decoding="async" />' +
+      '<figcaption>Recette de famille' + (c.qui ? ' · de ' + esc(c.qui) : '') + '</figcaption></figure></div>';
+    var ch = [/^\d+$/.test(c.pers || '') ? [c.pers, 'personnes'] : [c.pers, ''], [c.prep, 'de préparation'], [c.cuis, 'de cuisson']].filter(function (x) { return x[0]; });
+    if (ch.length) h += '<div class="recette-partie"><div class="chiffres">' + ch.map(function (x) {
+      return '<div class="chiffre"><div class="val">' + esc(x[0]) + '</div>' + (x[1] ? '<div class="lib">' + x[1] + '</div>' : '') + '</div>'; }).join('') + '</div></div>';
+    var ing = lignes(c.ingr);
+    if (ing.length) h += '<div class="recette-partie"><h3 class="recette-titre-partie"><span class="ico">🧺</span>Les ingrédients</h3><div class="ingredients-grille"><div class="ingredients-bloc">' +
+      '<div class="ingredients-titre">✦ Les ingrédients</div><ul class="ingredients-liste">' + ing.map(function (x) {
+        var m = x.match(UNITES);
+        return m ? '<li><span class="qte">' + esc(m[1] + (m[2] || '')) + '</span><span>' + esc(m[3]) + '</span></li>' : '<li><span class="qte"></span><span>' + esc(x) + '</span></li>';
+      }).join('') + '</ul></div></div></div>';
+    var et = lignes(c.etapes);
+    if (et.length) h += '<div class="recette-partie"><h3 class="recette-titre-partie"><span class="ico">👩‍🍳</span>La préparation</h3><div class="ingredients-bloc"><ol class="parcours-liste">' +
+      et.map(function (x, i) {
+        var m = x.match(/^([^:]{2,30})\s:\s*(.+)$/);
+        return '<li data-n="' + (i + 1) + '"><span>' + (m ? '<strong>' + esc(m[1]) + ' :</strong> ' + esc(m[2]) : esc(x)) + '</span></li>';
+      }).join('') + '</ol></div></div>';
+    if (c.mot && c.mot.trim()) h += '<div class="recette-partie"><h3 class="recette-titre-partie"><span class="ico">💬</span>Le petit mot de la famille</h3>' +
+      '<p class="carnet-souvenir">' + esc(c.mot.trim()).replace(/\n/g, '<br>') + '</p></div>';
+    return h + '</section>';
+  }
+
   function afficher() {
-    var l = C.lire();
-    document.getElementById('carnet-sous-titre').textContent = l.length
-      ? l.length + (l.length > 1 ? ' recettes choisies' : ' recette choisie') + ' dans les livres de Papy la Popote'
-      : 'Les recettes choisies dans les livres de Papy la Popote';
+    var l = C.lire(), nf = l.filter(function (r) { return r.famille; }).length, nl = l.length - nf;
+    var st = [];
+    if (nl) st.push(nbTexte(nl, 'recette choisie', 'recettes choisies') + ' dans les livres de Papy la Popote');
+    if (nf) st.push(nbTexte(nf, 'recette de famille', 'recettes de famille'));
+    document.getElementById('carnet-sous-titre').textContent = st.length ? st.join(' · ') : 'Les recettes choisies dans les livres de Papy la Popote et vos recettes de famille';
     document.getElementById('b-telecharger').disabled = !l.length;
     document.getElementById('b-imprimer').disabled = !l.length;
     document.getElementById('b-vider').hidden = !l.length;
     if (!l.length) {
       som.hidden = true;
-      zone.innerHTML = '<div class="carnet-vide">Votre carnet est encore vide.<br>Ouvrez un livre de recettes et touchez <b>« ♡ Mon carnet »</b> à côté du titre d\'une recette pour l\'ajouter ici.<br><br><a href="index.html#cuisine">🍳 Aller dans la cuisine</a></div>';
+      zone.innerHTML = '<div class="carnet-vide">Votre carnet est encore vide.<br>Ouvrez un livre de recettes et touchez <b>« ♡ Mon carnet »</b> à côté du titre d\'une recette pour l\'ajouter ici,<br>ou touchez <b>« ✍️ Écrire une recette de famille »</b> pour écrire vos propres recettes.<br><br><a href="index.html#cuisine">🍳 Aller dans la cuisine</a></div>';
       return;
     }
     var gs = groupes(l), h = '<h2>Sommaire</h2>', corps = '';
     gs.forEach(function (g) {
       h += '<h3>' + g[0] + '</h3><ol>';
       g[1].forEach(function (r) {
-        h += '<li><a href="#c-' + esc(r.id) + '">' + esc(r.titre) + '</a>' + (r.lieu ? ' <small>· ' + esc(r.lieu) + '</small>' : '') + '</li>';
-        corps += '<article class="carnet-fiche" id="c-' + esc(r.id) + '"><div class="carnet-fiche-outils"><span>' + esc(r.tome || '') + (r.lieu ? ' · ' + esc(r.lieu) : '') + '</span>' +
-          '<span class="act"><a href="livres/' + esc(r.lien) + '">📖 Voir dans le livre</a><button type="button" data-retirer="' + esc(r.id) + '">✕ Retirer</button></span></div>' + r.html + '</article>';
+        var info, act;
+        if (r.famille) {
+          var qui = r.champs && r.champs.qui;
+          h += '<li><a href="#c-' + esc(r.id) + '">' + esc(r.titre) + '</a>' + (qui ? ' <small>· de ' + esc(qui) + '</small>' : '') + '</li>';
+          info = '👵 Recette de famille' + (r.genre === 'sucree' ? ' sucrée' : ' salée') + (qui ? ' · de ' + esc(qui) : '');
+          act = '<button type="button" data-modifier="' + esc(r.id) + '">✏️ Modifier</button>';
+        } else {
+          h += '<li><a href="#c-' + esc(r.id) + '">' + esc(r.titre) + '</a>' + (r.lieu ? ' <small>· ' + esc(r.lieu) + '</small>' : '') + '</li>';
+          info = esc(r.tome || '') + (r.lieu ? ' · ' + esc(r.lieu) : '');
+          act = '<a href="livres/' + esc(r.lien) + '">📖 Voir dans le livre</a>';
+        }
+        corps += '<article class="carnet-fiche" id="c-' + esc(r.id) + '"><div class="carnet-fiche-outils"><span>' + info + '</span>' +
+          '<span class="act">' + act + '<button type="button" data-retirer="' + esc(r.id) + '">✕ Retirer</button></span></div>' +
+          (r.famille ? construire(r) : r.html) + '</article>';
       });
       h += '</ol>';
     });
     som.innerHTML = h; som.hidden = false; zone.innerHTML = corps;
   }
   zone.addEventListener('click', function (e) {
+    var m = e.target.closest('[data-modifier]');
+    if (m) { ouvrirForm(C.lire().filter(function (x) { return x.id === m.getAttribute('data-modifier'); })[0]); return; }
     var b = e.target.closest('[data-retirer]'); if (!b) return;
     var r = C.lire().filter(function (x) { return x.id === b.getAttribute('data-retirer'); })[0];
-    if (r && confirm('Retirer « ' + r.titre + ' » de votre carnet ?')) { C.retirer(r.id); afficher(); }
+    if (r && confirm((r.famille ? 'Effacer définitivement votre recette « ' : 'Retirer « ') + r.titre + ' » de votre carnet ?' +
+      (r.famille ? '\n(Elle n\'existe que dans ce carnet : pensez à le télécharger avant si vous voulez la garder.)' : ''))) { C.retirer(r.id); afficher(); }
+  });
+
+  /* Formulaire des recettes de famille */
+  var form = document.getElementById('carnet-form'), enCours = null, photo = '';
+  var apercu = document.getElementById('ff-apercu'), sansPhoto = document.getElementById('ff-sans-photo');
+  function champ(id) { return document.getElementById('ff-' + id); }
+  function majPhoto() { apercu.hidden = sansPhoto.hidden = !photo; if (photo) apercu.src = photo; else apercu.removeAttribute('src');
+    document.getElementById('ff-photo-lib').textContent = photo ? '📷 Changer de photo' : '📷 Choisir une photo'; }
+  function ouvrirForm(r) {
+    enCours = r || null;
+    var c = (r && r.champs) || {};
+    form.reset();
+    champ('titre').value = r ? r.titre : '';
+    form.querySelector('input[name=ff-genre][value=' + (r && r.genre === 'sucree' ? 'sucree' : 'salee') + ']').checked = true;
+    ['qui', 'pers', 'prep', 'cuis', 'ingr', 'etapes', 'mot'].forEach(function (k) { champ(k).value = c[k] || ''; });
+    photo = c.photo || ''; majPhoto();
+    document.getElementById('form-titre').textContent = r ? '✏️ Modifier « ' + r.titre + ' »' : '✍️ Une recette de famille';
+    document.getElementById('ff-ok').textContent = r ? '📒 Enregistrer les changements' : '📒 Enregistrer dans mon carnet';
+    form.hidden = false;
+    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(function () { champ('titre').focus({ preventScroll: true }); }, 400);
+  }
+  function fermerForm() { form.hidden = true; enCours = null; photo = ''; }
+  document.getElementById('b-famille').addEventListener('click', function () { ouvrirForm(null); });
+  document.getElementById('ff-annuler').addEventListener('click', function () {
+    fermerForm(); window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  sansPhoto.addEventListener('click', function () { photo = ''; champ('photo').value = ''; majPhoto(); });
+  /* la photo est réduite (900 px au plus, JPEG) pour tenir dans la mémoire de l'appareil */
+  champ('photo').addEventListener('change', function () {
+    var f = this.files && this.files[0]; if (!f) return;
+    var url = URL.createObjectURL(f), img = new Image();
+    img.onload = function () {
+      var k = Math.min(1, 900 / Math.max(img.naturalWidth, img.naturalHeight));
+      var cv = document.createElement('canvas');
+      cv.width = Math.round(img.naturalWidth * k); cv.height = Math.round(img.naturalHeight * k);
+      var cx = cv.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height);
+      cx.drawImage(img, 0, 0, cv.width, cv.height);
+      photo = cv.toDataURL('image/jpeg', 0.72); URL.revokeObjectURL(url); majPhoto();
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); alert("Cette image n'a pas pu être lue. Essayez une photo au format JPEG ou PNG."); };
+    img.src = url;
+  });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var titre = champ('titre').value.trim(); if (!titre) { champ('titre').focus(); return; }
+    var c = { photo: photo };
+    ['qui', 'pers', 'prep', 'cuis', 'ingr', 'etapes', 'mot'].forEach(function (k) { c[k] = champ(k).value.trim(); });
+    var r = { id: enCours ? enCours.id : 'famille-' + Date.now().toString(36), famille: true, titre: titre,
+      genre: form.querySelector('input[name=ff-genre]:checked').value, tome: 'Recette de famille', lieu: c.qui ? 'de ' + c.qui : '',
+      champs: c, ajout: enCours ? enCours.ajout : Date.now() };
+    var l = C.lire(), i = -1;
+    l.forEach(function (x, j) { if (x.id === r.id) i = j; });
+    if (i >= 0) l[i] = r; else l.push(r);
+    if (!C.ecrire(l)) return;
+    fermerForm(); afficher();
+    var fiche = document.getElementById('c-' + r.id); if (fiche) fiche.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
   document.getElementById('b-vider').addEventListener('click', function () {
     if (confirm('Retirer toutes les recettes de votre carnet ?\n(Pensez d\'abord à le télécharger si vous voulez le garder.)')) { C.ecrire([]); afficher(); }
@@ -147,7 +316,7 @@
       var page = '<!DOCTYPE html>\n<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">' +
         '<title>Mon carnet de recettes — Papy la Popote</title><style>' + css + '</style><style>' + document.getElementById('style-carnet').textContent + '</style></head>' +
         '<body class="carnet"><div class="carnet-page"><header class="carnet-entete"><h1>📒 Mon carnet de recettes</h1><p>' + l.length + (l.length > 1 ? ' recettes' : ' recette') +
-        ' de Papy la Popote · carnet enregistré le ' + date + '</p></header>' + som.outerHTML.replace(' hidden', '') + copie.outerHTML + '</div>' +
+        ' · carnet enregistré le ' + date + '</p></header>' + som.outerHTML.replace(' hidden', '') + copie.outerHTML + '</div>' +
         '<script type="application/json" id="carnet-donnees">' + donnees + '<\/script></body></html>';
       var a = document.createElement('a');
       a.href = URL.createObjectURL(new Blob([page], { type: 'text/html' }));
@@ -165,7 +334,7 @@
       if (!m) throw 0;
       var lues = JSON.parse(m[1]), l = C.lire(), ids = {}, n = 0;
       l.forEach(function (r) { ids[r.id] = 1; });
-      lues.forEach(function (r) { if (r && r.id && r.html && !ids[r.id]) { l.push(r); ids[r.id] = 1; n++; } });
+      lues.forEach(function (r) { if (r && r.id && (r.html || r.famille) && !ids[r.id]) { l.push(r); ids[r.id] = 1; n++; } });
       if (C.ecrire(l)) { afficher(); alert(n ? n + (n > 1 ? ' recettes ajoutées' : ' recette ajoutée') + ' à votre carnet.' : 'Toutes ces recettes sont déjà dans votre carnet.'); }
     }).catch(function () { alert("Ce fichier n'est pas un carnet de recettes de Papy la Popote."); });
   });

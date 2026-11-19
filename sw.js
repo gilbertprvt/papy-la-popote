@@ -1,5 +1,5 @@
 /* Papy la Popote — fonctionnement hors ligne. Fichier généré : ne pas modifier à la main. */
-const VERSION = '564cfc438d';
+const VERSION = 'a7f25a7007';
 const BASE = 'papy-base-' + VERSION;      // la maison, la cuisine, les livres (sans les photos de recettes)
 const PHOTOS = 'papy-photos';              // les photos de recettes, gardées d'une version à l'autre
 const POLICES = 'papy-polices';
