@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#6c2818">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icones/favicon-48.png?v=20261115">
+<link rel="apple-touch-icon" href="icones/apple-touch-icon.png?v=20261115">
+<title>Mon carnet de recettes — Papy la Popote</title>
+<link rel="stylesheet" href="commun/site.css" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style id="style-carnet">
+  body.carnet { margin: 0; background: #f4e9d7; background-image: repeating-linear-gradient(#f4e9d7 0 31px, #e6d6bb 31px 32px); color: #3a2414; }
+  .carnet-page { max-width: 860px; margin: 0 auto; padding: 18px 16px 90px; }
+  .carnet-entete { position: relative; background: #fffaf0; border: 1px solid #d9c3a0; border-left: 14px solid #6c2818; border-radius: 6px 14px 14px 6px;
+    padding: 26px 26px 22px; box-shadow: 0 6px 18px rgba(60,30,10,.18); margin-bottom: 22px; }
+  .carnet-entete h1 { font-family: 'Playfair Display', Georgia, serif; color: #6c2818; font-size: clamp(28px, 5vw, 42px); margin: 0 0 4px; }
+  .carnet-entete p { margin: 0; font: italic 17px Georgia, serif; color: #6b4a2a; }
+  .carnet-outils { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .carnet-outils button, .carnet-outils a, .carnet-outils label { font: 600 15px system-ui, -apple-system, "Segoe UI", sans-serif; border-radius: 999px; padding: 9px 16px;
+    border: 1.5px solid #6c2818; background: #fffaf0; color: #6c2818; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  .carnet-outils .principal { background: #6c2818; color: #fff; }
+  .carnet-outils button:hover, .carnet-outils a:hover, .carnet-outils label:hover, .carnet-outils :focus-visible { background: #C8843A; border-color: #C8843A; color: #fff; outline: none; }
+  .carnet-outils input[type=file] { position: absolute; width: 1px; height: 1px; opacity: 0; }
+  .carnet-sommaire { background: #fffaf0; border: 1px solid #d9c3a0; border-radius: 14px; padding: 18px 22px; margin-bottom: 22px; }
+  .carnet-sommaire h2 { font: 700 20px 'Playfair Display', Georgia, serif; color: #6c2818; margin: 0 0 8px; }
+  .carnet-sommaire h3 { font: 600 15px system-ui, sans-serif; color: #8B5A2B; margin: 12px 0 4px; text-transform: uppercase; letter-spacing: .04em; }
+  .carnet-sommaire ol { margin: 0; padding-left: 22px; columns: 2 240px; }
+  .carnet-sommaire li { font: 16px/1.6 Georgia, serif; }
+  .carnet-sommaire a { color: #3a2414; }
+  .carnet-sommaire small { color: #8B7355; }
+  .carnet-vide { background: #fffaf0; border: 1px dashed #b89a6c; border-radius: 14px; padding: 30px 24px; text-align: center; font: 18px/1.6 Georgia, serif; }
+  .carnet-fiche { background: #fffaf0; border: 1px solid #d9c3a0; border-radius: 14px; padding: 22px 22px 6px; margin-bottom: 26px; box-shadow: 0 4px 14px rgba(60,30,10,.12); }
+  .carnet-fiche-outils { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center; margin-bottom: 8px;
+    font: 14px system-ui, sans-serif; color: #8B7355; }
+  .carnet-fiche-outils span { font-style: italic; }
+  .carnet-fiche-outils .act { display: flex; gap: 8px; }
+  .carnet-fiche-outils a, .carnet-fiche-outils button { font: 600 13px system-ui, sans-serif; border-radius: 999px; padding: 6px 12px; border: 1px solid #b89a6c;
+    background: #fff; color: #6c2818; cursor: pointer; text-decoration: none; }
+  .carnet-fiche-outils button:hover, .carnet-fiche-outils a:hover { background: #6c2818; color: #fff; }
+  .carnet-fiche .section { margin-bottom: 10px !important; }
+  .carnet-fiche .carnet-btn { display: none; }
+  .carnet-bas { position: fixed; left: 14px; bottom: 14px; z-index: 20; }
+  .carnet-bas a { display: inline-block; padding: 9px 16px; border-radius: 26px; background: #6c2818; color: #fff; text-decoration: none; font: 600 15px system-ui, sans-serif;
+    box-shadow: 0 3px 12px rgba(60,30,10,.3); border: 1px solid #FAC775; }
+  .carnet-attente { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; background: rgba(40,20,10,.5); }
+  .carnet-attente[hidden] { display: none; }
+  .carnet-attente div { background: #fffaf0; border-radius: 14px; padding: 22px 26px; font: 17px system-ui, sans-serif; }
+  @media (max-width: 640px) { .carnet-entete { padding: 20px 16px 16px; border-left-width: 10px; } .carnet-fiche { padding: 16px 12px 4px; } }
+  @media print {
+    body.carnet { background: #fff; }
+    .carnet-outils, .carnet-fiche-outils, .carnet-bas, .carnet-attente { display: none !important; }
+    .carnet-entete, .carnet-sommaire, .carnet-fiche { box-shadow: none; border: 0; }
+    .carnet-entete { page-break-after: always; text-align: center; padding-top: 30vh; }
+    .carnet-sommaire { page-break-after: always; }
+    .carnet-fiche { page-break-before: always; padding: 0; }
+    .carnet-fiche img { max-height: 9cm; width: auto; }
+  }
+</style>
+</head>
+<!-- Carnet de recettes personnel : les recettes choisies dans les livres (bouton « ♡ Mon carnet »)
+     sont gardées sur l'appareil (localStorage « papy-carnet ») et affichées ici.
+     « Télécharger mon carnet » crée un fichier .html autonome (photos incluses), lisible sans le site. -->
+<body class="carnet">
+<div class="carnet-page">
+  <header class="carnet-entete">
+    <h1 id="carnet-titre">📒 Mon carnet de recettes</h1>
+    <p id="carnet-sous-titre">Les recettes choisies dans les livres de Papy la Popote</p>
+    <div class="carnet-outils" id="carnet-outils">
+      <button type="button" class="principal" id="b-telecharger">⬇️ Télécharger mon carnet</button>
+      <button type="button" id="b-imprimer">🖨️ Imprimer</button>
+      <label for="f-ouvrir" tabindex="0">📂 Ouvrir un carnet téléchargé</label><input type="file" id="f-ouvrir" accept=".html,text/html">
+      <button type="button" id="b-vider">🗑️ Vider le carnet</button>
+    </div>
+  </header>
+  <nav class="carnet-sommaire" id="carnet-sommaire" hidden></nav>
+  <div class="livre-recettes" id="carnet-recettes"></div>
+</div>
+<div class="carnet-bas" id="carnet-bas"><a href="index.html#cuisine">🍳 Retour à la cuisine</a></div>
+<div class="carnet-attente" id="carnet-attente" hidden><div>⏳ Préparation du carnet, avec les photos…</div></div>
+<script src="commun/carnet.js"></script>
+<script>
+(function () {
+  var C = window.PapyCarnet;
+  var zone = document.getElementById('carnet-recettes'), som = document.getElementById('carnet-sommaire');
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function groupes(l) {
+    var g = [['salee', '🍲 Recettes salées'], ['sucree', '🥧 Recettes sucrées'], ['', '📖 Autres recettes']];
+    return g.map(function (x) { return [x[1], l.filter(function (r) { return (r.genre || '') === x[0]; })]; }).filter(function (x) { return x[1].length; });
+  }
+  function afficher() {
+    var l = C.lire();
+    document.getElementById('carnet-sous-titre').textContent = l.length
+      ? l.length + (l.length > 1 ? ' recettes choisies' : ' recette choisie') + ' dans les livres de Papy la Popote'
+      : 'Les recettes choisies dans les livres de Papy la Popote';
+    document.getElementById('b-telecharger').disabled = !l.length;
+    document.getElementById('b-imprimer').disabled = !l.length;
+    document.getElementById('b-vider').hidden = !l.length;
+    if (!l.length) {
+      som.hidden = true;
+      zone.innerHTML = '<div class="carnet-vide">Votre carnet est encore vide.<br>Ouvrez un livre de recettes et touchez <b>« ♡ Mon carnet »</b> à côté du titre d\'une recette pour l\'ajouter ici.<br><br><a href="index.html#cuisine">🍳 Aller dans la cuisine</a></div>';
+      return;
+    }
+    var gs = groupes(l), h = '<h2>Sommaire</h2>', corps = '';
+    gs.forEach(function (g) {
+      h += '<h3>' + g[0] + '</h3><ol>';
+      g[1].forEach(function (r) {
+        h += '<li><a href="#c-' + esc(r.id) + '">' + esc(r.titre) + '</a>' + (r.lieu ? ' <small>· ' + esc(r.lieu) + '</small>' : '') + '</li>';
+        corps += '<article class="carnet-fiche" id="c-' + esc(r.id) + '"><div class="carnet-fiche-outils"><span>' + esc(r.tome || '') + (r.lieu ? ' · ' + esc(r.lieu) : '') + '</span>' +
+          '<span class="act"><a href="livres/' + esc(r.lien) + '">📖 Voir dans le livre</a><button type="button" data-retirer="' + esc(r.id) + '">✕ Retirer</button></span></div>' + r.html + '</article>';
+      });
+      h += '</ol>';
+    });
+    som.innerHTML = h; som.hidden = false; zone.innerHTML = corps;
+  }
+  zone.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-retirer]'); if (!b) return;
+    var r = C.lire().filter(function (x) { return x.id === b.getAttribute('data-retirer'); })[0];
+    if (r && confirm('Retirer « ' + r.titre + ' » de votre carnet ?')) { C.retirer(r.id); afficher(); }
+  });
+  document.getElementById('b-vider').addEventListener('click', function () {
+    if (confirm('Retirer toutes les recettes de votre carnet ?\n(Pensez d\'abord à le télécharger si vous voulez le garder.)')) { C.ecrire([]); afficher(); }
+  });
+  document.getElementById('b-imprimer').addEventListener('click', function () { window.print(); });
+  window.addEventListener('storage', afficher);
+
+  /* Télécharger : un seul fichier .html, avec les styles et les photos à l'intérieur */
+  function enDonnee(url) {
+    return fetch(url).then(function (r) { if (!r.ok) throw 0; return r.blob(); }).then(function (b) {
+      return new Promise(function (ok) { var f = new FileReader(); f.onload = function () { ok(f.result); }; f.readAsDataURL(b); });
+    }).catch(function () { return url; });
+  }
+  document.getElementById('b-telecharger').addEventListener('click', function () {
+    var l = C.lire(); if (!l.length) return;
+    var attente = document.getElementById('carnet-attente'); attente.hidden = false;
+    var copie = zone.cloneNode(true);
+    [].forEach.call(copie.querySelectorAll('.carnet-fiche-outils .act'), function (x) { x.remove(); });
+    var imgs = [].slice.call(copie.querySelectorAll('img'));
+    Promise.all([
+      fetch('commun/site.css').then(function (r) { return r.text(); }).catch(function () { return ''; }),
+      Promise.all(imgs.map(function (i) { return enDonnee(i.src).then(function (d) { i.src = d; }); }))
+    ]).then(function (res) {
+      var css = res[0].replace(/@import[^;]+;/g, '');
+      var date = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+      var donnees = JSON.stringify(l).replace(/</g, '\\u003c');
+      var page = '<!DOCTYPE html>\n<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">' +
+        '<title>Mon carnet de recettes — Papy la Popote</title><style>' + css + '</style><style>' + document.getElementById('style-carnet').textContent + '</style></head>' +
+        '<body class="carnet"><div class="carnet-page"><header class="carnet-entete"><h1>📒 Mon carnet de recettes</h1><p>' + l.length + (l.length > 1 ? ' recettes' : ' recette') +
+        ' de Papy la Popote · carnet enregistré le ' + date + '</p></header>' + som.outerHTML.replace(' hidden', '') + copie.outerHTML + '</div>' +
+        '<script type="application/json" id="carnet-donnees">' + donnees + '<\/script></body></html>';
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([page], { type: 'text/html' }));
+      a.download = 'mon-carnet-de-recettes.html';
+      document.body.appendChild(a); a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+    }).finally(function () { attente.hidden = true; });
+  });
+
+  /* Ouvrir un carnet téléchargé : ses recettes s'ajoutent à celui de l'appareil */
+  document.getElementById('f-ouvrir').addEventListener('change', function () {
+    var f = this.files && this.files[0]; this.value = ''; if (!f) return;
+    f.text().then(function (t) {
+      var m = t.match(/<script type="application\/json" id="carnet-donnees">([\s\S]*?)<\/script>/);
+      if (!m) throw 0;
+      var lues = JSON.parse(m[1]), l = C.lire(), ids = {}, n = 0;
+      l.forEach(function (r) { ids[r.id] = 1; });
+      lues.forEach(function (r) { if (r && r.id && r.html && !ids[r.id]) { l.push(r); ids[r.id] = 1; n++; } });
+      if (C.ecrire(l)) { afficher(); alert(n ? n + (n > 1 ? ' recettes ajoutées' : ' recette ajoutée') + ' à votre carnet.' : 'Toutes ces recettes sont déjà dans votre carnet.'); }
+    }).catch(function () { alert("Ce fichier n'est pas un carnet de recettes de Papy la Popote."); });
+  });
+  document.querySelector('label[for=f-ouvrir]').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); document.getElementById('f-ouvrir').click(); } });
+
+  afficher();
+  if (location.hash) { var c = document.getElementById(location.hash.slice(1)); if (c) c.scrollIntoView(); }
+})();
+</script>
+</body>
+</html>

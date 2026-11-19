@@ -62,6 +62,12 @@
   @media (hover: none) { .scene.terminee .livre-lien { animation: halo 2.4s ease-out infinite; } }
   .scene.sans-transition img { transition: none !important; }
 
+  /* Mon carnet de recettes : visible une fois dans la cuisine */
+  .carnet { position: absolute; left: 2%; top: 2%; z-index: 3; display: none; align-items: center; gap: .4em; text-decoration: none; border-radius: 999px;
+            padding: .55em 1em; font: 600 15px system-ui, sans-serif; background: #6c2818; color: #fff; border: 1px solid #FAC775; box-shadow: 0 2px 10px rgba(60,30,10,.3); }
+  .scene.terminee .carnet { display: inline-flex; }
+  .carnet:hover, .carnet:focus-visible { background: #C8843A; outline: none; }
+
   /* Barre d'outils : installation et état hors ligne */
   .outils { position: fixed; left: 50%; bottom: max(10px, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 10;
             display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; width: max-content; max-width: 96vw; }
@@ -91,6 +97,7 @@
   <a class="livre-lien sale" href="livres/recettes-salees-france.html" aria-label="Ouvrir le livre « Recettes salées »"><span>Ouvrir les recettes salées</span></a>
   <a class="livre-lien sucre" href="livres/recettes-sucrees-france.html" aria-label="Ouvrir le livre « Recettes sucrées »"><span>Ouvrir les recettes sucrées</span></a>
   <a class="livre-lien outremer" href="livres/recettes-outre-mer.html" aria-label="Ouvrir le livre « Recettes salées et sucrées d'outre-mer »"><span>Ouvrir les recettes d'outre-mer</span></a>
+  <a class="carnet" id="carnet" href="carnet.html" title="Ouvrir mon carnet de recettes">📒 Mon carnet de recettes</a>
   <button class="intro" id="intro">Supprimer l'intro</button>
   <button class="ressortir" id="ressortir">Ressortir</button>
 </main>
@@ -158,6 +165,9 @@ if (location.hash === '#cuisine' || sansIntro()) {
   directCuisine();
   if (location.hash) history.replaceState(null, '', location.pathname);
 }
+
+// Nombre de recettes dans le carnet
+try { const n = (JSON.parse(localStorage.getItem('papy-carnet')) || []).length; if (n) document.getElementById('carnet').textContent = '📒 Mon carnet de recettes (' + n + ')'; } catch (_) {}
 
 // Précharger les images suivantes pour que les fondus soient fluides
 [...imgs].forEach(i => { i.decoding = 'async'; });
