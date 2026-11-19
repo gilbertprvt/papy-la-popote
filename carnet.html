@@ -142,6 +142,7 @@
 </div>
 <div class="carnet-bas" id="carnet-bas"><a href="index.html#cuisine">🍳 Retour à la cuisine</a></div>
 <div class="carnet-attente" id="carnet-attente" hidden><div>⏳ Préparation du carnet, avec les photos…</div></div>
+<script src="commun/glossaire.js"></script>
 <script src="commun/carnet.js"></script>
 <script>
 (function () {
@@ -308,6 +309,7 @@
     var imgs = [].slice.call(copie.querySelectorAll('img'));
     Promise.all([
       fetch('commun/site.css').then(function (r) { return r.text(); }).catch(function () { return ''; }),
+      fetch('commun/glossaire.js').then(function (r) { return r.text(); }).catch(function () { return ''; }),
       Promise.all(imgs.map(function (i) { return enDonnee(i.src).then(function (d) { i.src = d; }); }))
     ]).then(function (res) {
       var css = res[0].replace(/@import[^;]+;/g, '');
@@ -317,7 +319,7 @@
         '<title>Mon carnet de recettes — Papy la Popote</title><style>' + css + '</style><style>' + document.getElementById('style-carnet').textContent + '</style></head>' +
         '<body class="carnet"><div class="carnet-page"><header class="carnet-entete"><h1>📒 Mon carnet de recettes</h1><p>' + l.length + (l.length > 1 ? ' recettes' : ' recette') +
         ' · carnet enregistré le ' + date + '</p></header>' + som.outerHTML.replace(' hidden', '') + copie.outerHTML + '</div>' +
-        '<script type="application/json" id="carnet-donnees">' + donnees + '<\/script></body></html>';
+        (res[1] ? '<script>' + res[1].replace(/<\/script/gi, '<\\/script') + '<\/script>' : '') + '<script type="application/json" id="carnet-donnees">' + donnees + '<\/script></body></html>';
       var a = document.createElement('a');
       a.href = URL.createObjectURL(new Blob([page], { type: 'text/html' }));
       a.download = 'mon-carnet-de-recettes.html';

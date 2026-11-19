@@ -2638,3 +2638,14 @@ html.livre-chargement body::before {
 .avant-propos .section-titre { justify-content: center; }
 .avant-propos .ap-sous-titre { text-align: center; font-family: var(--font-titre); font-style: italic; color: #8B7355; font-size: calc(19px + var(--taille-plus)); margin: -4px 0 14px; }
 .avant-propos .ap-signature { text-align: right; font-family: var(--font-titre); font-style: italic; color: #6c2818; margin-top: 14px; }
+
+/* Recettes approfondies : l'histoire du plat et les secrets de Papy */
+.livre-recettes .recette-histoire p { font-size: calc(14.5px + var(--taille-plus, 0px)); line-height: 1.7; margin: 0 0 10px; text-align: justify; hyphens: auto; }
+.livre-recettes .recette-histoire p:first-child::first-letter { font-family: var(--font-titre); font-size: 2.3em; float: left; line-height: .9; margin: 4px 6px 0 0; color: var(--rc, #9A3F2C); font-weight: 700; }
+.livre-recettes .recette-astuces { list-style: none; margin: 0; padding: 14px 18px; background: #FFF8EA; border: 1px dashed #E3B672; border-radius: 12px; }
+.livre-recettes .recette-astuces li { position: relative; padding: 6px 0 6px 26px; font-size: 14.5px; line-height: 1.6; }
+.livre-recettes .recette-astuces li + li { border-top: 1px dashed #EBD3A8; }
+.livre-recettes .recette-astuces li::before { content: "👴"; position: absolute; left: 0; top: 6px; font-size: 15px; }
+.livre-recettes .recette-variante { font-size: 14px; line-height: 1.6; margin: 12px 0 0; padding: 10px 14px; background: white; border: 1px solid #E0DACE; border-radius: 10px; }
+.livre-recettes .recette-variante strong { color: var(--rc2, #5A3E1B); }
+.livre-recettes .ingredients-liste li.ingr-sous { grid-column: 1 / -1; display: block; border-bottom: 0; padding: 10px 0 2px; font-family: var(--font-titre); font-weight: 700; font-style: italic; color: var(--rc2, #5A3E1B); }
