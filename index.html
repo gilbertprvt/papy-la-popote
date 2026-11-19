@@ -44,10 +44,11 @@
   .scene.terminee .ressortir { opacity: 1; pointer-events: auto; }
 
 
-  /* Les deux livres de la table, cliquables une fois dans la cuisine */
+  /* Les trois livres de la table, cliquables une fois dans la cuisine */
   .livre-lien { position: absolute; z-index: 2; border-radius: 6px; display: none; }
-  .livre-lien.sale { left: 38.5%; top: 50.5%; width: 26.5%; height: 24%; }
-  .livre-lien.sucre { left: 66.5%; top: 50.5%; width: 26.5%; height: 24%; }
+  .livre-lien.sale { left: 20%; top: 51%; width: 24.5%; height: 25%; }
+  .livre-lien.sucre { left: 44.7%; top: 51%; width: 24.5%; height: 25%; }
+  .livre-lien.outremer { left: 69.3%; top: 51%; width: 27.3%; height: 25%; }
   .scene.terminee .livre-lien { display: block; }
   .livre-lien:hover, .livre-lien:focus-visible { box-shadow: 0 0 0 4px rgba(255,225,106,.9), 0 0 26px 8px rgba(255,225,106,.55); outline: none; }
   .livre-lien span { position: absolute; left: 50%; bottom: -2.2em; transform: translateX(-50%); white-space: nowrap; background: #6c2818; color: #fff;
@@ -78,12 +79,13 @@
 <main class="scene" id="scene" aria-label="Entrée de la cuisine de Papy la Popote">
   <img src="images/porte-fermee.webp" alt="Papy la Popote devant la porte fermée de sa cuisine">
   <img class="ouverte" src="images/porte-ouverte.webp" alt="" aria-hidden="true">
-  <img class="cuisine" src="images/cuisine.webp" alt="" aria-hidden="true">
+  <img class="cuisine" src="images/cuisine.webp?v=20261119" alt="" aria-hidden="true">
   <span class="halo" aria-hidden="true"></span>
   <button class="entree panneau" id="entree" aria-label="Ouvrir la porte et entrer dans la cuisine" title="Entrer"></button>
   <button class="entree porte" tabindex="-1" aria-hidden="true" title="Entrer"></button>
   <a class="livre-lien sale" href="livres/recettes-salees-france.html" aria-label="Ouvrir le livre « Recettes salées »"><span>Ouvrir les recettes salées</span></a>
   <a class="livre-lien sucre" href="livres/recettes-sucrees-france.html" aria-label="Ouvrir le livre « Recettes sucrées »"><span>Ouvrir les recettes sucrées</span></a>
+  <a class="livre-lien outremer" href="livres/recettes-outre-mer.html" aria-label="Ouvrir le livre « Recettes salées et sucrées d'outre-mer »"><span>Ouvrir les recettes d'outre-mer</span></a>
   <button class="ressortir" id="ressortir">Ressortir</button>
 </main>
 <div class="outils">
@@ -111,7 +113,7 @@ function entrer() {
   scene.classList.add('est-ouverte');                 // 1. la porte s'ouvre (4,5 s)
   plus_tard(() => {                                    // 2. dès que la porte est ouverte, la cuisine apparaît en fondu
     scene.classList.add('dans-cuisine');
-    imgs[0].alt = ''; imgs[2].alt = "La cuisine de Papy la Popote, avec les livres « Recettes salées » et « Recettes sucrées » sur la table";
+    imgs[0].alt = ''; imgs[2].alt = "La cuisine de Papy la Popote, avec les livres « Recettes salées », « Recettes sucrées » et « Recettes salées et sucrées d\'outre-mer » sur la table";
     imgs[2].removeAttribute('aria-hidden');
   }, 4500);
   plus_tard(() => scene.classList.add('terminee'), 7000);
@@ -130,7 +132,7 @@ ressortir.addEventListener('click', () => {           // retour devant la porte 
 if (location.hash === '#cuisine') {
   scene.classList.add('sans-transition', 'est-ouverte', 'dans-cuisine', 'terminee');
   requestAnimationFrame(() => requestAnimationFrame(() => scene.classList.remove('sans-transition')));
-  imgs[0].alt = ''; imgs[2].alt = "La cuisine de Papy la Popote, avec les livres « Recettes salées » et « Recettes sucrées » sur la table";
+  imgs[0].alt = ''; imgs[2].alt = "La cuisine de Papy la Popote, avec les livres « Recettes salées », « Recettes sucrées » et « Recettes salées et sucrées d\'outre-mer » sur la table";
   imgs[2].removeAttribute('aria-hidden');
   history.replaceState(null, '', location.pathname);
 }
