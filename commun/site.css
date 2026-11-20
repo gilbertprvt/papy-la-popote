@@ -2649,3 +2649,16 @@ html.livre-chargement body::before {
 .livre-recettes .recette-variante { font-size: 14px; line-height: 1.6; margin: 12px 0 0; padding: 10px 14px; background: white; border: 1px solid #E0DACE; border-radius: 10px; }
 .livre-recettes .recette-variante strong { color: var(--rc2, #5A3E1B); }
 .livre-recettes .ingredients-liste li.ingr-sous { grid-column: 1 / -1; display: block; border-bottom: 0; padding: 10px 0 2px; font-family: var(--font-titre); font-weight: 700; font-style: italic; color: var(--rc2, #5A3E1B); }
+
+/* Lecture en défilement sur téléphone : rien ne doit déborder de l'écran */
+.produit-layout > * { min-width: 0; }
+@media (max-width: 900px) {
+  .produit-layout { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  .livre-recettes .chiffres { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .livre-recettes .tableau-wrap { max-width: 100%; overflow-x: auto; }
+  .livre-recettes .tableau { min-width: 0; }
+  .livre-recettes .ingredients-grille, .livre-recettes .encadres { grid-template-columns: minmax(0, 1fr); }
+  .livre-recettes .ingredients-liste li > span { overflow-wrap: anywhere; }
+}
